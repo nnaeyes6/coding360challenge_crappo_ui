@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'package:crappo_crypto_ui_challenge/provider/theme_provider.dart';
 import 'package:crappo_crypto_ui_challenge/screens/second_screen.dart';
 import 'package:folding_menu/folding_menu.dart';
 
 import 'package:crappo_crypto_ui_challenge/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:list_tile_switch/list_tile_switch.dart';
-import 'package:provider/provider.dart';
 
 class MyCrappoPage extends StatefulWidget {
   const MyCrappoPage({Key? key}) : super(key: key);
@@ -16,6 +14,12 @@ class MyCrappoPage extends StatefulWidget {
 }
 
 bool openMenu = false;
+
+bool isClicked = false;
+
+// void clickEvent() {
+//   isClicked = !isClicked;
+// }
 
 class _MyCrappoPageState extends State<MyCrappoPage>
     with SingleTickerProviderStateMixin {
@@ -56,9 +60,8 @@ class _MyCrappoPageState extends State<MyCrappoPage>
 
   @override
   Widget build(BuildContext context) {
-    final object = Provider.of<ButtonTapListenerClass>(context);
     return Scaffold(
-      backgroundColor: object.isClicked
+      backgroundColor: isClicked
           ? Theme.of(context).primaryColorDark
           : Theme.of(context).primaryColorLight,
       body: NestedScrollView(
@@ -611,18 +614,28 @@ class _MyCrappoPageState extends State<MyCrappoPage>
                   tileColor: Colors.white,
                 ),
               ),
-              ListTileSwitch(
-                value: ButtonTapListenerClass().isClicked,
-                // leading: Icon(Icons.access_alarms),
-                onChanged: (value) {
-                  var objectClicked =
-                      Provider.of<ButtonTapListenerClass>(context);
-                  objectClicked.clickEvent();
-                },
-                visualDensity: VisualDensity.comfortable,
-                switchType: SwitchType.cupertino,
-                switchActiveColor: Colors.indigo,
-                title: const Text('Theme'),
+              Container(
+                padding: const EdgeInsets.only(left: 50, right: 50),
+                color: AppColor.backGroundColor,
+                child: ListTileSwitch(
+                  value: isClicked,
+                  onChanged: (value) {
+                    setState(() {
+                      isClicked = !isClicked;
+                    });
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  switchType: SwitchType.cupertino,
+                  switchActiveColor: Colors.white,
+                  title: const Text(
+                    "Switch Mode",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ],
           ),

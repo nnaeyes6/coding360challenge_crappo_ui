@@ -9,7 +9,7 @@ class SecondScreen extends StatelessWidget {
       backgroundColor: Color(0xFF0D0D2B),
       body: Center(
           child: Text(
-        'Second Screen',
+        'Crappo Crypto',
         style: TextStyle(color: Colors.white70, fontSize: 50),
       )),
     );
