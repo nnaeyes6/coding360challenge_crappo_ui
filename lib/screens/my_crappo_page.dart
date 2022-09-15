@@ -1,5 +1,12 @@
+import 'dart:async';
+import 'package:crappo_crypto_ui_challenge/provider/theme_provider.dart';
+import 'package:crappo_crypto_ui_challenge/screens/second_screen.dart';
+import 'package:folding_menu/folding_menu.dart';
+
 import 'package:crappo_crypto_ui_challenge/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:list_tile_switch/list_tile_switch.dart';
+import 'package:provider/provider.dart';
 
 class MyCrappoPage extends StatefulWidget {
   const MyCrappoPage({Key? key}) : super(key: key);
@@ -8,7 +15,36 @@ class MyCrappoPage extends StatefulWidget {
   State<MyCrappoPage> createState() => _MyCrappoPageState();
 }
 
-class _MyCrappoPageState extends State<MyCrappoPage> {
+bool openMenu = false;
+
+class _MyCrappoPageState extends State<MyCrappoPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _animationController,
+    curve: Curves.fastOutSlowIn,
+  );
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    );
+
+    super.initState();
+    Timer(
+      const Duration(seconds: 1),
+      () => _animationController.forward(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   var items = [
     'TH/s',
     'H/s',
@@ -17,431 +53,580 @@ class _MyCrappoPageState extends State<MyCrappoPage> {
     'GH/s',
   ];
   String? selectedItem = 'TH/s';
+
   @override
   Widget build(BuildContext context) {
+    final object = Provider.of<ButtonTapListenerClass>(context);
     return Scaffold(
-        backgroundColor: AppColor.backGroundColor,
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return [sliverAppBar()];
-          },
-          body: crappoBody(context),
-        ));
+      backgroundColor: object.isClicked
+          ? Theme.of(context).primaryColorDark
+          : Theme.of(context).primaryColorLight,
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [sliverAppBar()];
+        },
+        body: crappoBody(context),
+      ),
+    );
   }
 
   Center crappoBody(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                blackFridaySave(context),
-                const SizedBox(
-                  height: 10,
+        child: Stack(children: [
+          Column(
+            children: [
+              blackFridaySave(
+                context,
+                animationController: _animationController,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              platformText(animationController: _animationController),
+              const SizedBox(
+                height: 5,
+              ),
+              trustBuyText(animationController: _animationController),
+              const SizedBox(
+                height: 20,
+              ),
+              tryForFreeText(),
+              const SizedBox(
+                height: 10,
+              ),
+              bitcoinImage(animationController: _animationController),
+              const SizedBox(
+                height: 50,
+              ),
+              iconRowColumn(animationController: _animationController),
+              const SizedBox(
+                height: 20,
+              ),
+              whyChooseText(),
+              const SizedBox(
+                height: 30,
+              ),
+              experienceText(),
+              const SizedBox(
+                height: 20,
+              ),
+              learnMoreButton(),
+              Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20),
+                  child: Image.asset('images/Illustrations_logo.png')),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: const Text(
+                  'Check how much you can earn',
+                  style: TextStyle(
+                      color: Color(0xFFE0E0E0),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 30,
+                      fontFamily: 'Rubik',
+                      letterSpacing: 0.1),
+                  textAlign: TextAlign.center,
                 ),
-                platformText(),
-                const SizedBox(
-                  height: 5,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: const Text(
+                  'Let’s check your hash rate to see how much you will earn today, Exercitation veniam consequat sunt nostrud amet.',
+                  style: TextStyle(
+                      color: Color(0xFFE0E0E0),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      fontFamily: 'Rubik',
+                      letterSpacing: 0.1),
+                  textAlign: TextAlign.center,
                 ),
-                trustBuyText(),
-                const SizedBox(
-                  height: 20,
-                ),
-                tryForFreeText(),
-                const SizedBox(
-                  height: 10,
-                ),
-                bitcoinImage(),
-                const SizedBox(
-                  height: 50,
-                ),
-                iconRowColumn(),
-                const SizedBox(
-                  height: 20,
-                ),
-                whyChooseText(),
-                const SizedBox(
-                  height: 30,
-                ),
-                experienceText(),
-                const SizedBox(
-                  height: 20,
-                ),
-                learnMoreButton(),
-                Container(
-                    margin: const EdgeInsets.only(left: 20, right: 20),
-                    child: Image.asset('images/Illustrations_logo.png')),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: const Text(
-                    'Check how much you can earn',
-                    style: TextStyle(
-                        color: Color(0xFFE0E0E0),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 30,
-                        fontFamily: 'Rubik',
-                        letterSpacing: 0.1),
-                    textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 400,
+              ),
+              secureTrade(context),
+              investSmart(context),
+              startMining(context),
+              const SizedBox(
+                height: 50,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'images/crappo_logo.png',
+                    height: 46,
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: const Text(
-                    'Let’s check your hash rate to see how much you will earn today, Exercitation veniam consequat sunt nostrud amet.',
-                    style: TextStyle(
-                        color: Color(0xFFE0E0E0),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        fontFamily: 'Rubik',
-                        letterSpacing: 0.1),
-                    textAlign: TextAlign.center,
+                  const SizedBox(
+                    width: 10,
                   ),
-                ),
-                const SizedBox(
-                  height: 400,
-                ),
-                secureTrade(context),
-                investSmart(context),
-                startMining(context),
-                const SizedBox(
-                  height: 50,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'images/crappo_logo.png',
-                      height: 46,
+                  const Text(
+                    'CRAPPO',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontFamily: 'Inter',
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'CRAPPO',
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 70,
+              ),
+              quickLinks(),
+              resourcesLinks(),
+              const SizedBox(height: 70),
+              const Text(
+                'We accept following payment systems',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              paymentSystem(),
+              const SizedBox(
+                height: 50,
+              ),
+              const Text(
+                '©2021 CRAPPO. All rights reserved',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              socialMediaHandles()
+            ],
+          ),
+          Positioned(
+            top: 1880,
+            right: 0,
+            left: 0,
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              width: MediaQuery.of(context).size.width,
+              height: 450,
+              decoration: BoxDecoration(
+                color: const Color(
+                  0xFFFBFCFE,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(
+                        top: 20, left: 30, bottom: 5, right: 30),
+                    child: const Text(
+                      'Enter your hash rate',
                       style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontFamily: 'Inter',
-                      ),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                          fontFamily: 'Rubik',
+                          letterSpacing: 0.1),
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 70,
-                ),
-                quickLinks(),
-                resourcesLinks(),
-                const SizedBox(height: 70),
-                const Text(
-                  'We accept following payment systems',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
                   ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                paymentSystem(),
-                const SizedBox(
-                  height: 50,
-                ),
-                const Text(
-                  '©2021 CRAPPO. All rights reserved',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                socialMediaHandles()
-              ],
-            ),
-            Positioned(
-              top: 1880,
-              right: 0,
-              left: 0,
-              child: Container(
-                margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                width: MediaQuery.of(context).size.width,
-                height: 450,
-                decoration: BoxDecoration(
-                  color: const Color(
-                    0xFFFBFCFE,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(
-                          top: 20, left: 30, bottom: 5, right: 30),
-                      child: const Text(
-                        'Enter your hash rate',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                            fontFamily: 'Rubik',
-                            letterSpacing: 0.1),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30, right: 30),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            width: 1,
-                            color: Color(0xffE0E0E0),
-                          ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30, right: 30),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 1,
+                          color: Color(0xffE0E0E0),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            DropdownButton(
-                              // Initial Value
-                              value: selectedItem,
-                              isExpanded: true,
-                              // Down Arrow Icon
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 16,
-                              ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          DropdownButton(
+                            // Initial Value
+                            value: selectedItem,
+                            isExpanded: true,
+                            // Down Arrow Icon
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 16,
+                            ),
 
-                              // Array list of items
-                              items: items.map((String items) {
-                                return DropdownMenuItem(
-                                  value: items,
-                                  child: Text(items),
-                                );
-                              }).toList(),
-                              // After selecting the desired option,it will
-                              // change button value to selected value
-                              onChanged: (String? newItem) {
-                                setState(() {
-                                  selectedItem = newItem!;
-                                });
-                              },
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                    bottom: 30,
+                            // Array list of items
+                            items: items.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(items),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newItem) {
+                              setState(() {
+                                selectedItem = newItem!;
+                              });
+                            },
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(
+                                  bottom: 30,
+                                ),
+                                width: 110,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                    0xFF3671E9,
                                   ),
-                                  width: 110,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xFF3671E9,
-                                    ),
-                                    borderRadius: BorderRadius.circular(32),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      "Calculate",
-                                      style: TextStyle(
-                                          color: Color(
-                                            0xFFFFFFff,
-                                          ),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16),
-                                    ),
+                                  borderRadius: BorderRadius.circular(32),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    "Calculate",
+                                    style: TextStyle(
+                                        color: Color(
+                                          0xFFFFFFff,
+                                        ),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: const Text('ESTIMATED 24 HOUR REVENUE:',
-                          style: TextStyle(
-                              color: Color(0xFF3671E9),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              fontFamily: 'Rubik',
-                              letterSpacing: 0.1)),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: const Text('0.055 130 59 ETH',
-                          style: TextStyle(
-                              color: Color(0xFF0D0D2B),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 34,
-                              fontFamily: 'Rubik',
-                              letterSpacing: 0.1)),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: const Text('(\$1275)',
-                          style: TextStyle(
-                              color: Color(0xFF3671E9),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 34,
-                              fontFamily: 'Rubik',
-                              letterSpacing: 0.1)),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: const Text(
-                          'Revenue will change based on mining difficulty and Ethereum price.',
-                          style: TextStyle(
-                              color: Color(0xFF828282),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              fontFamily: 'Rubik',
-                              letterSpacing: 0.1)),
-                    ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: const Text('ESTIMATED 24 HOUR REVENUE:',
+                        style: TextStyle(
+                            color: Color(0xFF3671E9),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            fontFamily: 'Rubik',
+                            letterSpacing: 0.1)),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: const Text('0.055 130 59 ETH',
+                        style: TextStyle(
+                            color: Color(0xFF0D0D2B),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 34,
+                            fontFamily: 'Rubik',
+                            letterSpacing: 0.1)),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: const Text('(\$1275)',
+                        style: TextStyle(
+                            color: Color(0xFF3671E9),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 34,
+                            fontFamily: 'Rubik',
+                            letterSpacing: 0.1)),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: const Text(
+                        'Revenue will change based on mining difficulty and Ethereum price.',
+                        style: TextStyle(
+                            color: Color(0xFF828282),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            fontFamily: 'Rubik',
+                            letterSpacing: 0.1)),
+                  ),
+                ],
               ),
             ),
-            Positioned(
-              top: 4200,
-              left: 70,
-              child: Container(
-                height: 134,
-                width: 118,
-                decoration: BoxDecoration(
-                  color: const Color(0xff491F98),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 15, left: 10),
-                    height: 180,
-                    width: 320,
-                    decoration: BoxDecoration(
-                      color: const Color(0xff491F98),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Increase in \nTrade",
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColor.primaryColor),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              "75%",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: 'Rubik',
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xffF2F2F2),
-                                  letterSpacing: 0.1),
-                              textAlign: TextAlign.start,
+          ),
+          Positioned(
+            top: 4200,
+            left: 70,
+            child: Container(
+              height: 134,
+              width: 118,
+              decoration: BoxDecoration(
+                color: const Color(0xff491F98),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.only(top: 15, left: 10),
+                  height: 180,
+                  width: 320,
+                  decoration: BoxDecoration(
+                    color: const Color(0xff491F98),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Increase in \nTrade",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppColor.primaryColor),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          const Text(
+                            "75%",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Rubik',
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xffF2F2F2),
+                                letterSpacing: 0.1),
+                            textAlign: TextAlign.start,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.arrow_upward_rounded,
+                              size: 15,
+                              color: Color(0xffFD8589),
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.arrow_upward_rounded,
-                                size: 15,
-                                color: Color(0xffFD8589),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Text(
-                          "Sell option",
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xffF2F2F2),
-                              letterSpacing: 0.1),
-                          textAlign: TextAlign.start,
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      const Text(
+                        "Sell option",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xffF2F2F2),
+                            letterSpacing: 0.1),
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            Positioned(
-              top: 4210,
-              left: 230,
-              child: Container(
-                height: 54,
-                width: 100,
-                decoration: BoxDecoration(
-                  color: const Color(0xff491F98),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "\$15.32",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Rubik',
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xffF2F2F2),
-                          letterSpacing: 0.1),
-                      textAlign: TextAlign.start,
-                    ),
-                    Text(
-                      "Price in dollar",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xffF2F2F2),
-                          letterSpacing: 0.1),
-                      textAlign: TextAlign.start,
-                    ),
-                  ],
-                ),
+          ),
+          Positioned(
+            top: 4210,
+            left: 230,
+            child: Container(
+              height: 54,
+              width: 100,
+              decoration: BoxDecoration(
+                color: const Color(0xff491F98),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    "\$15.32",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Rubik',
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xffF2F2F2),
+                        letterSpacing: 0.1),
+                    textAlign: TextAlign.start,
+                  ),
+                  Text(
+                    "Price in dollar",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xffF2F2F2),
+                        letterSpacing: 0.1),
+                    textAlign: TextAlign.start,
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          AnimatedOpacity(
+            opacity: openMenu ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 400),
+            child: Container(
+              color: AppColor.backGroundColor,
+              child: const Center(child: Text("")),
+            ),
+          ),
+          FoldingMenu(
+            duration: const Duration(milliseconds: 900),
+            shadowColor: AppColor.backGroundColor,
+            animationCurve: Curves.decelerate,
+            folded: openMenu,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                color: AppColor.backGroundColor,
+                child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SecondScreen()));
+                  },
+                  title: const Text(
+                    "Product",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  tileColor: Colors.white,
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                color: AppColor.backGroundColor,
+                child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SecondScreen()));
+                  },
+                  title: const Text(
+                    "Features",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  tileColor: Colors.white,
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                color: AppColor.backGroundColor,
+                child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SecondScreen()));
+                  },
+                  title: const Text(
+                    "About",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  tileColor: Colors.white,
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                color: AppColor.backGroundColor,
+                child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SecondScreen()));
+                  },
+                  title: const Text(
+                    "Contact",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  tileColor: Colors.white,
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                color: AppColor.backGroundColor,
+                child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SecondScreen()));
+                  },
+                  title: const Text(
+                    "Login",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  tileColor: Colors.white,
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                color: AppColor.backGroundColor,
+                child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SecondScreen()));
+                  },
+                  title: const Text(
+                    "Regsiter",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  tileColor: Colors.white,
+                ),
+              ),
+              ListTileSwitch(
+                value: ButtonTapListenerClass().isClicked,
+                // leading: Icon(Icons.access_alarms),
+                onChanged: (value) {
+                  var objectClicked =
+                      Provider.of<ButtonTapListenerClass>(context);
+                  objectClicked.clickEvent();
+                },
+                visualDensity: VisualDensity.comfortable,
+                switchType: SwitchType.cupertino,
+                switchActiveColor: Colors.indigo,
+                title: const Text('Theme'),
+              ),
+            ],
+          ),
+        ]),
       ),
     );
   }
@@ -1473,53 +1658,66 @@ class _MyCrappoPageState extends State<MyCrappoPage> {
     );
   }
 
-  Container iconRowColumn() {
+  Container iconRowColumn({required AnimationController animationController}) {
     return Container(
       padding: const EdgeInsets.all(30),
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                height: 60,
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(255, 255, 255, 0.1),
-                  borderRadius: BorderRadius.circular(360),
-                ),
-                child: Image.asset(
-                  'images/bar_chart_icon.png',
-                ),
-              ),
-              const SizedBox(
-                width: 30,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: const Text('\$30B',
-                        style: TextStyle(
-                            color: Color(0xFFE0E0E0),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 40,
-                            fontFamily: 'Rubik',
-                            letterSpacing: 0.1)),
+          SlideTransition(
+            position: Tween<Offset>(
+                    begin: const Offset(
+                      1,
+                      0,
+                    ),
+                    end: Offset.zero)
+                .animate(_animationController),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(255, 255, 255, 0.1),
+                    borderRadius: BorderRadius.circular(360),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: const Text('Digital Currency Exchanged',
-                        style: TextStyle(
-                            color: Color(0xFFE0E0E0),
-                            fontWeight: FontWeight.w300,
-                            fontSize: 16,
-                            fontFamily: 'Rubik',
-                            letterSpacing: 0.1)),
+                  child: Image.asset(
+                    'images/bar_chart_icon.png',
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: const Text('\$30B',
+                          style: TextStyle(
+                              color: Color(0xFFE0E0E0),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 40,
+                              fontFamily: 'Rubik',
+                              letterSpacing: 0.1)),
+                    ),
+                    Wrap(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: const Text('Digital Currency Exchanged',
+                              style: TextStyle(
+                                  color: Color(0xFFE0E0E0),
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 16,
+                                  fontFamily: 'Rubik',
+                                  letterSpacing: 0.1)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
@@ -1618,10 +1816,16 @@ class _MyCrappoPageState extends State<MyCrappoPage> {
     );
   }
 
-  Image bitcoinImage() {
-    return Image.asset(
-      'images/Illustration1.png',
-      height: 300,
+  bitcoinImage({required AnimationController animationController}) {
+    return FadeTransition(
+      opacity: animationController,
+      child: ScaleTransition(
+        scale: _animation,
+        child: Image.asset(
+          'images/Illustration1.png',
+          height: 300,
+        ),
+      ),
     );
   }
 
@@ -1629,70 +1833,109 @@ class _MyCrappoPageState extends State<MyCrappoPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Container(
-          margin: const EdgeInsets.only(left: 20),
-          width: 202,
-          height: 50,
-          decoration: BoxDecoration(
-            color: const Color(
-              0xFF3671E9,
-            ),
-            borderRadius: BorderRadius.circular(32),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Center(
-                child: Text(
-                  "Try for FREE",
-                  style: TextStyle(
-                      color: Color(
-                        0xFFFFFFff,
-                      ),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18),
+        ScaleTransition(
+          scale: _animation,
+          child: FadeTransition(
+            opacity: _animationController,
+            child: Container(
+              margin: const EdgeInsets.only(left: 20),
+              width: 202,
+              height: 50,
+              decoration: BoxDecoration(
+                color: const Color(
+                  0xFF3671E9,
                 ),
+                borderRadius: BorderRadius.circular(32),
               ),
-              const SizedBox(
-                width: 10,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Center(
+                    child: Text(
+                      "Try for FREE",
+                      style: TextStyle(
+                          color: Color(
+                            0xFFFFFFff,
+                          ),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SlideTransition(
+                      position: Tween<Offset>(
+                              begin: const Offset(
+                                -4,
+                                0,
+                              ),
+                              end: Offset.zero)
+                          .animate(_animationController),
+                      child: Image.asset('images/arrow_logo.png'))
+                ],
               ),
-              Image.asset('images/arrow_logo.png')
-            ],
+            ),
           ),
         ),
       ],
     );
   }
 
-  Container trustBuyText() {
+  Container trustBuyText({required AnimationController animationController}) {
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20),
-      child: const Text(
-          'Buy and sell cryptocurrencies, trusted by 10M wallets with over \$30 billion in transactions.',
-          style: TextStyle(
-              color: Color(0xFFE0E0E0),
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
-              fontFamily: 'Rubik',
-              letterSpacing: 0.1)),
+      child: SlideTransition(
+        position: Tween<Offset>(
+                begin: const Offset(
+                  0,
+                  2,
+                ),
+                end: Offset.zero)
+            .animate(animationController),
+        child: FadeTransition(
+          opacity: _animationController,
+          child: const Text(
+              'Buy and sell cryptocurrencies, trusted by 10M wallets with over \$30 billion in transactions.',
+              style: TextStyle(
+                  color: Color(0xFFE0E0E0),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontFamily: 'Rubik',
+                  letterSpacing: 0.1)),
+        ),
+      ),
     );
   }
 
-  Container platformText() {
+  Container platformText({required AnimationController animationController}) {
     return Container(
       padding: const EdgeInsets.all(20),
-      child: Text('Fastest & Secure Platform to Invest In Crypto',
-          style: TextStyle(
-              color: AppColor.primaryColor,
-              fontWeight: FontWeight.w700,
-              fontSize: 44,
-              fontStyle: FontStyle.normal,
-              fontFamily: 'Rubik',
-              letterSpacing: 0.1)),
+      child: SlideTransition(
+        position: Tween<Offset>(
+                begin: const Offset(
+                  0,
+                  1,
+                ),
+                end: Offset.zero)
+            .animate(animationController),
+        child: FadeTransition(
+          opacity: _animationController,
+          child: Text('Fastest & Secure Platform to Invest In Crypto',
+              style: TextStyle(
+                  color: AppColor.primaryColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 44,
+                  fontStyle: FontStyle.normal,
+                  fontFamily: 'Rubik',
+                  letterSpacing: 0.1)),
+        ),
+      ),
     );
   }
 
-  Column blackFridaySave(BuildContext context) {
+  Column blackFridaySave(BuildContext context,
+      {required AnimationController animationController}) {
     return Column(
       children: [
         Container(
@@ -1703,24 +1946,31 @@ class _MyCrappoPageState extends State<MyCrappoPage> {
               color: const Color.fromRGBO(255, 255, 255, 0.1),
               borderRadius: BorderRadius.circular(32),
             ),
-            child: Row(
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Container(
-                  margin: const EdgeInsets.all(5),
-                  width: 100,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: AppColor.primaryColor,
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                  child: const Center(
-                    child: Text("70% SAVE",
-                        style: TextStyle(
-                            color: Color(
-                              0xFF0D0D2B,
-                            ),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16)),
+                ScaleTransition(
+                  scale: animationController,
+                  child: FadeTransition(
+                    opacity: _animationController,
+                    child: Container(
+                      margin: const EdgeInsets.all(5),
+                      width: 100,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: AppColor.primaryColor,
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      child: const Center(
+                        child: Text("70% SAVE",
+                            style: TextStyle(
+                                color: Color(
+                                  0xFF0D0D2B,
+                                ),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16)),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -1742,8 +1992,8 @@ class _MyCrappoPageState extends State<MyCrappoPage> {
   SliverAppBar sliverAppBar() {
     return SliverAppBar(
       actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Image.asset(
               'images/crappo_logo.png',
@@ -1759,15 +2009,16 @@ class _MyCrappoPageState extends State<MyCrappoPage> {
               ),
             ),
             const SizedBox(
-              width: 210,
+              width: 200,
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.menu,
-                ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  openMenu = !openMenu;
+                });
+              },
+              icon: const Icon(
+                Icons.menu,
               ),
             ),
           ],

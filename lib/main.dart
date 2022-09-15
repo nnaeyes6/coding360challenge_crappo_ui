@@ -1,3 +1,4 @@
+import 'package:crappo_crypto_ui_challenge/colors.dart';
 import 'package:crappo_crypto_ui_challenge/screens/my_crappo_page.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +15,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Crappo Wallet',
+      darkTheme: ThemeData.dark(),
       theme: ThemeData(
-        fontFamily: 'Rubik',
-        primarySwatch: Colors.blue,
-      ),
+          // brightness: Brightness.dark,
+          visualDensity: const VisualDensity(horizontal: 2.0, vertical: 2.0),
+          primaryColorLight: AppColor.backGroundColor,
+          primaryColorDark: Colors.grey.shade900,
+          fontFamily: 'Rubik'),
       home: const MyCrappoPage(),
     );
   }
